@@ -20,7 +20,6 @@ export async function onboardUser(prevState: any, formData: FormData) {
      return submission.reply();
    }
  
-   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const data = await prisma.user.update({
      where: {
        id: session.user?.id,
