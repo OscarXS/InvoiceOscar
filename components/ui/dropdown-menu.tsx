@@ -19,9 +19,12 @@ const DropdownMenuSub = DropdownMenuPrimitive.Sub
 
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
 
-const SubTrigger = forwardRef((props, ref) => (
-  <DropdownMenuPrimitive.SubTrigger {...props} ref={ref} />
-));
+const SubTrigger = forwardRef<HTMLDivElement, DropdownMenuPrimitive.DropdownMenuSubTriggerProps>(
+  (props, ref) => (
+    <DropdownMenuPrimitive.SubTrigger {...props} ref={ref} />
+  )
+);
+
 SubTrigger.displayName = 'SubTrigger';
 
 const DropdownMenuSubTrigger = React.forwardRef<
