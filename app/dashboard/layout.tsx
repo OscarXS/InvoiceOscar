@@ -1,0 +1,107 @@
+import React, { ReactNode } from 'react'
+import { requireUser } from '../utils/hooks'
+import Link from 'next/link'
+import Image from 'next/image'
+import Logo from '@/public/logo.png'
+import DashboardLinks from '../components/DashboardLinks'
+import SheetBox from '../components/SheetBox'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { User2 } from 'lucide-react'
+import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
+import { signOut } from '../utils/auth';
+import prisma from '../utils/db'
+import { redirect } from 'next/navigation'
+import { Toaster } from '@/components/ui/sonner'
+
+async function getUser(userId: string) {
+    const data = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+        select: {
+            firstName: true,
+            lastName: true,
+            address: true,
+        }
+    })
+
+    if(!data?.firstName || !data?.lastName || !data?.address) {
+        redirect('/onboarding')
+    }
+}
+
+const DashboardLayout = async ({ children }: { children: ReactNode }) => {
+    const session = await requireUser();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const data = await getUser(session.user?.id as string)
+  return (
+    <>
+        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+            <div className="hidden border-r bg-muted/40 md:block">
+                <div className="flex flex-col max-h-screen h-full gap-2">
+                    <div className="h-14 flex items-center border-b px-4 lg:h-[60px] lg:px-6">
+                        <Link href="/" className='flex items-center gap-2'>
+                            <Image 
+                                src={Logo}
+                                className='size-7'
+                                alt='Logo'
+                            />
+                            <p className='text-2xl font-bold'>Invoice<span className='text-blue-600'>Demo</span></p>
+                        </Link>
+                    </div>
+                    <div className="flex-1">
+                        <nav className='grid items-start text-sm px-2 font-medium lg:px-4'>
+                            <DashboardLinks />
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-col">
+                <header className="flex h-14 gap-4 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+                    <SheetBox />
+                    <div className="flex items-center ml-auto">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button className='rounded-full' variant='outline' size='icon'>
+                                    <User2 />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align='end'>
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild>
+                                    <Link href='/dashboard'>Dashboard</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href='/dashboard/invoices'>Invoices</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild>
+                                    <form 
+                                        className='w-full' 
+                                        action={async () => {
+                                            "use server"
+                                            await signOut()
+                                        }}
+                                    >
+                                        <button className='w-full text-left'>Log Out</button>
+                                    </form>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </header>
+                <main className='flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6'>
+                    { children }
+                </main>
+            </div>
+        </div>
+
+        <Toaster richColors closeButton theme='light' />
+    </>
+  )
+}
+
+export default DashboardLayout
