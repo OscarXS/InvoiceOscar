@@ -1,7 +1,6 @@
 import Link from "next/link";
 import logoImg from '@/public/logo.png'
 import Image from "next/image";
-import { buttonVariants } from "@/components/ui/button";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 
 export function Navbar() {

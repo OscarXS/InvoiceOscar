@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react'
-import { signOut } from "@/app/utils/auth"
 import { requireUser } from '../utils/hooks'
 import { DashbordBlocks } from '../components/DashbordBlocks';
 import { InvoiceGraph } from '../components/InvoiceGraph';
