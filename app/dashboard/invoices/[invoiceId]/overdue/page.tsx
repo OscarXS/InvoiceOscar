@@ -49,13 +49,6 @@ export default async function OverdueInvoice({ params }: { params: Params }) {
                     <form action={async () => {
                         "use server"
                         await OverdueInvoiceAction(invoiceId);
-                        const response = await OverdueInvoiceAction(invoiceId);
-
-                        if (response.success as unknown) {
-                        toast.success('User deleted successfully');
-                        } else {
-                        toast.error(`Error: ${response.error as unknown}`);
-                        }
                     }}>
                         <SubmitButton text="Confirm" />
                     </form>

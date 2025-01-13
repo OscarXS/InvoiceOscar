@@ -49,13 +49,6 @@ export default async function CancelledInvoice({ params }: { params: Params }) {
                     <form action={async () => {
                         "use server"
                         await CancelInvoiceAction(invoiceId);
-                        const response = await CancelInvoiceAction(invoiceId);
-
-                        if (response.success as unknown) {
-                        toast.success('User deleted successfully');
-                        } else {
-                        toast.error(`Error: ${response.error as unknown}`);
-                        }
                     }}>
                         <SubmitButton text="Confirm" />
                     </form>
